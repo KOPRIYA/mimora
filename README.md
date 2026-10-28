@@ -2,6 +2,8 @@
 
 **From imitation to mastery.**
 
+[Open the public app](https://kopriya.github.io/mimora/)
+
 MIMORA connects people through the transfer of practical knowledge. Recreating an expert’s craft is the starting point; thoughtful feedback and continuous practice help learners refine their understanding and grow toward expertise.
 
 [Production infrastructure and launch plan](docs/PRODUCTION.md)
@@ -18,7 +20,7 @@ Requires Node.js 20 or newer. No npm installation or API key is required.
 npm start
 ```
 
-Open http://127.0.0.1:4173. The online private Site runs the same studio, without the local WAV endpoint.
+Open http://127.0.0.1:4173. The public GitHub Pages app and the original private Site run the same studio, without the local WAV endpoint.
 
 ```sh
 npm test
@@ -75,6 +77,12 @@ Import the two JSON files in the studio. Keep their results as estimates requiri
 
 References: [Basic Pitch](https://github.com/spotify/basic-pitch), [MediaPipe Hand Landmarker](https://developers.google.com/edge/mediapipe/solutions/vision/hand_landmarker/web_js).
 
+## GitHub Pages deployment
+
+`.github/workflows/pages.yml` publishes only `dist/` after syntax checks and tests pass. It runs on pushes to `main` and can be started manually. Repository Settings → Pages must use **GitHub Actions** as the publishing source. No secrets or API keys are needed.
+
+The public URL is https://kopriya.github.io/mimora/. Relative asset and worker paths support the `/mimora/` prefix. The Node server and Python tools are source downloads, not services executed by GitHub Pages.
+
 ## Audio export
 
 macOS needs no additional speech package. On Linux, install `espeak-ng` with your system package manager. Windows users can use browser speech or run the local server under Linux/WSL with espeak-ng. The endpoint accepts only a bounded text report, runs speech generation without a shell, serializes jobs, uses temporary files, and rejects cross-origin requests. The server binds only to loopback. Do not expose it directly to the internet.
@@ -103,7 +111,7 @@ Reference + attempt (local File/MediaRecorder)
 
 ## Privacy
 
-The hosted Site starts private. Recordings are local object URLs and are not sent to a server. Saved history contains note events, instructor observations and reports; users can delete individual entries or clear all history. On shared computers, clear history after practice. Speech synthesis may use the operating system's speech service. Model inspection fetches public model assets; frames remain local. Fonts are fetched from Google Fonts, with system font fallbacks. Use recordings with the owner's permission; there is no training-data reuse.
+The GitHub Pages app and this repository are public; the original Site retains its private access. Recordings are local object URLs and are not sent to a server. Saved history contains note events, instructor observations and reports; users can delete individual entries or clear all history. On shared computers, clear history after practice. Speech synthesis may use the operating system's speech service. Model inspection fetches public model assets; frames remain local. Fonts are fetched from Google Fonts, with system font fallbacks. Use recordings with the owner's permission; there is no training-data reuse.
 
 ## Verification
 

@@ -8,7 +8,7 @@ Prepared 28 October 2026. This is a deployment recommendation and capacity estim
 
 ### Launch the current app as a browser-first beta
 
-The current studio can be served as static files from `dist/`. Processing and saved history remain in the learner's browser. It needs no database, GPU, API keys, or persistent server. The existing private Site already provides this experience.
+The current studio can be served as static files from `dist/`. Processing and saved history remain in the learner's browser. It needs no database, GPU, API keys, or persistent server. The original private Site already provides this experience. The public GitHub Pages version is deployed at https://kopriya.github.io/mimora/ using `.github/workflows/pages.yml`. Updates to `main` are published only after its checks pass.
 
 For your own domain, connect the GitHub repository to Cloudflare Pages. Use framework preset None, repository root `/`, build command `exit 0`, output directory `dist`, and production branch `main`. Configure a domain you own and verify HTTPS. A domain name has not been purchased or checked for availability. Cloudflare's documentation supports static HTML projects and these build settings: https://developers.cloudflare.com/pages/framework-guides/deploy-anything/
 
@@ -111,4 +111,4 @@ Do not begin with Kubernetes or an always-on GPU cluster. A static frontend, man
 - Initial learner count, monthly attempts, clip duration/size, retention period, region and spending limit.
 - Consent and instructor-review arrangements for the evaluation set.
 
-Only the existing private Site and GitHub source repository are being updated in this task. No paid infrastructure, public access change, or domain purchase is implied by this plan.
+GitHub Pages publishes the browser studio publicly at the owner’s request. The original private Site is separate. No paid backend infrastructure or domain purchase is included.
