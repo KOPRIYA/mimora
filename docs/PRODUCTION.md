@@ -8,13 +8,13 @@ Prepared 28 October 2026. This is a deployment recommendation and capacity estim
 
 ### Launch the current app as a browser-first beta
 
-The current studio can be served as static files from `dist/`. Processing and saved history remain in the learner's browser. It needs no database, GPU, API keys, or persistent server. The original private Site already provides this experience. The public GitHub Pages version is deployed at https://kopriya.github.io/mimora/ using `.github/workflows/pages.yml`. Updates to `main` are published only after its checks pass.
+The current studio can be served as static files from `dist/`. Media processing remains in the learner's browser. Guest practice needs no database or GPU. Version 2 includes Supabase sign-in and shared profiles/reports, which require a configured project and the supplied database migration. The original private Site already provides this experience. The public GitHub Pages version is deployed at https://kopriya.github.io/mimora/ using `.github/workflows/pages.yml`. Updates to `main` are published only after its checks pass.
 
 For your own domain, connect the GitHub repository to Cloudflare Pages. Use framework preset None, repository root `/`, build command `exit 0`, output directory `dist`, and production branch `main`. Configure a domain you own and verify HTTPS. A domain name has not been purchased or checked for availability. Cloudflare's documentation supports static HTML projects and these build settings: https://developers.cloudflare.com/pages/framework-guides/deploy-anything/
 
-GitHub Actions runs the syntax checks and 14 behavioral tests. Configure hosting branch controls/required checks before treating the pipeline as a release gate; the included workflow alone does not prevent a hosting service from deploying a failing commit.
+GitHub Actions runs the syntax checks and 23 behavioral tests. Configure hosting branch controls/required checks before treating the pipeline as a release gate; the included workflow alone does not prevent a hosting service from deploying a failing commit.
 
-The static deployment does not run `server.mjs`. Spoken playback uses device speech; downloadable WAV requires the local server. There are no cross-device accounts or cloud video libraries yet. Keep those limits explicit in the beta.
+The static deployment does not run `server.mjs`. Spoken playback uses device speech; downloadable WAV requires the local server. The Supabase account/profile/report integration is implemented but awaits project configuration and live verification. There is no cloud video library yet. Keep those limits explicit in the beta.
 
 ### Launch a managed pilot with accounts and durable assessments — recommended next
 
@@ -82,8 +82,8 @@ Render service pricing depends on the selected machine and workspace plan; confi
 
 ## 5. Application changes required before cloud launch
 
-1. Add sign-in, ownership and instructor/learner roles. Enforce authorization server-side on every exercise, recording, finding and export.
-2. Replace localStorage as the primary cross-device record with database persistence. Preserve local-only practice as a separate choice.
+1. Connect and validate the supplied Supabase email sign-in, profile and report ownership policies using [the setup guide](SUPABASE_SETUP.md). Add instructor/learner roles. Enforce authorization server-side on every exercise, recording, finding and export.
+2. Test cross-device report persistence and two-account isolation. Guest practice remains temporary; v1 local reports are not migrated automatically.
 3. Add signed direct uploads, a media completion check, duration/format validation and private replay URLs.
 4. Introduce job IDs, idempotent retries, cancellation, timeouts, explicit failure states and per-user quotas.
 5. Run FFmpeg and model jobs with restricted permissions and bounded resources. Cache reference features by media hash, model version and rubric version.
@@ -97,7 +97,7 @@ Render service pricing depends on the selected machine and workspace plan; confi
 
 **First:** publish the renamed browser beta on your chosen domain and run a small consented music pilot. Keep automated audio conclusions marked possible and technique unassessed.
 
-**Next:** implement the managed backend, cross-device history, private media and hosted audio export. Validate the audio models against the pilot corpus before expanding automatic scoring.
+**Next:** connect and validate shared profiles/history, then implement private media, the managed analysis backend and hosted audio export. Validate the audio models against the pilot corpus before expanding automatic scoring.
 
 **Then:** add separately validated craft step recognition and pronunciation alignment. Treat each domain as its own perception/rubric/evaluation project. Add optional explanation models only after measurements and evidence validation are complete.
 

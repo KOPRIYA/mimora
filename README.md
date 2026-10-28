@@ -10,11 +10,11 @@ MIMORA connects people through the transfer of practical knowledge. Recreating a
 
 An evidence-first practice studio: preserve a reference, compare an attempt, replay a meaningful difference, and practice again.
 
-This is a working, local-first MVP based on the supplied eight-page system design. It is not a production perception system or a claim that arbitrary skills can be automatically assessed. The PDF's MIDI-first rollout guides the implementation.
+This is a working browser-first MVP based on the supplied eight-page system design. It is not a production perception system or a claim that arbitrary skills can be automatically assessed. The PDF's MIDI-first rollout guides the implementation.
 
 ## Run it
 
-Requires Node.js 20 or newer. No npm installation or API key is required.
+Requires Node.js 20 or newer. No npm installation is required. Guest practice needs no API key; shared accounts require the public Supabase configuration and database migration.
 
 ```sh
 npm start
@@ -27,15 +27,24 @@ npm test
 npm run check
 ```
 
-## Try the learning loop
+## Profile-based practice
 
-1. Explore the three labeled synthetic cases: differences, matching performance, and uncertain evidence. Findings are computed from event fixtures by the real comparison engine, not hardcoded.
-2. Choose **New session**. Add your expert and learner `.mid` files, or short audio/video recordings. Examples are included in `examples/`.
-3. Choose timing tolerance and whether overall tempo variation is allowed.
-4. Compare. Click a finding to play the corresponding excerpts. Select which person's audio to hear; playback speed is adjustable.
-5. Review or dismiss findings. Dismissal withholds the score to avoid a stale score. Recompare only after correcting source events or the rubric.
-6. Listen to spoken feedback, download the detailed `.txt` report, and save the attempt.
-7. Replace the learner recording and compare again. Save under the same title to see the score change when the reference and rubric match.
+Start with a neutral workspace. Choose **Learning profile**, then your skill, experience, goal, practice language and feedback preference. Guest previews are temporary. Connect Supabase using [the setup guide](docs/SUPABASE_SETUP.md) to enable email sign-in and shared profiles/reports.
+
+- Language: target phrase, waveforms, duration/quiet-time measurements, pronunciation review categories.
+- Craft: expert-derived step checklist, video review and optional hand inspection.
+- Movement: sequence checklist and coordination/timing observations.
+- Presentation: key-message outline, delivery categories and audio measurements.
+- Music: MIDI comparison, note/timing settings and explicitly labeled synthetic examples.
+
+The app combines the profile with supported media types. MIDI selects music automatically; audio and video enable the appropriate recording tools. It does **not** infer a craft, spoken language or exercise from arbitrary recording contents. A manual workspace override is always available.
+
+1. Set a learning profile and add the expert reference plus your attempt.
+2. Write your target phrase, outline or step checklist when relevant.
+3. Compare supported music evidence or open a guided review for other skills.
+4. Replay original moments and add timestamped observations. Review or dismiss findings.
+5. Listen to feedback or download a detailed text report. Sign in to save the report across devices.
+6. Repeat with another attempt. Reattach original recordings when reopening saved reports for media playback.
 
 ## Implemented capabilities and limits
 
@@ -52,7 +61,7 @@ npm run check
 | Coaching | Deterministic text derived from measured findings. No LLM dependency or invented physical diagnoses. |
 | Audio feedback | Browser speech playback; downloadable spoken WAV through the local Node server (macOS `say`, or Linux `espeak-ng`). Browser speech voices vary by device. |
 | Reports | Detailed text with source spans, methods, finding states, practice actions, limitations, and dismissed-findings audit |
-| Progress | Up to 30 reports and event sequences saved in browser localStorage; source recordings are never stored |
+| Profiles and history | Supabase email sign-in and per-user database integration; configuration required. Latest 30 reports shown across devices. Guest profiles are temporary; source recordings are not uploaded. |
 | Limits | 250 MB file size; audio/video up to 60 seconds; 1,000 events; MIDI timestamps up to 600 seconds |
 
 Do not use this release to grade unconstrained polyphonic music, infer exact fret/string contact, diagnose injuries, or judge a person's accent. These capabilities are not implemented. Different valid fingering is not penalized. A perfect event score does not imply perfect technique.
@@ -79,7 +88,7 @@ References: [Basic Pitch](https://github.com/spotify/basic-pitch), [MediaPipe Ha
 
 ## GitHub Pages deployment
 
-`.github/workflows/pages.yml` publishes only `dist/` after syntax checks and tests pass. It runs on pushes to `main` and can be started manually. Repository Settings → Pages must use **GitHub Actions** as the publishing source. No secrets or API keys are needed.
+`.github/workflows/pages.yml` publishes only `dist/` after syntax checks and tests pass. It runs on pushes to `main` and can be started manually. Repository Settings → Pages must use **GitHub Actions** as the publishing source. No secret keys belong in the frontend. Shared accounts require a public Supabase project URL and publishable key in `dist/config.js`.
 
 The public URL is https://kopriya.github.io/mimora/. Relative asset and worker paths support the `/mimora/` prefix. The Node server and Python tools are source downloads, not services executed by GitHub Pages.
 
@@ -102,6 +111,9 @@ Reference + attempt (local File/MediaRecorder)
 ```
 
 - `dist/core.js`: media-independent MIDI parser, alignment, scoring, audio measurement, and report contracts.
+- `dist/experience.js`: profile normalization, workspace selection, audio envelopes and guided reports.
+- `dist/cloud.js` / `config.js`: Supabase sign-in, shared profiles and reports.
+- `supabase/migrations/001_profiles.sql`: owner-only database access policies.
 - `dist/audio-worker.js`: moves audio computation off the UI thread.
 - `dist/app.js`: ingestion, media state, consent-triggered recording, review, replay, model inspection, and persistence.
 - `dist/index.html` / `styles.css`: responsive and keyboard-accessible studio.
@@ -111,11 +123,11 @@ Reference + attempt (local File/MediaRecorder)
 
 ## Privacy
 
-The GitHub Pages app and this repository are public; the original Site retains its private access. Recordings are local object URLs and are not sent to a server. Saved history contains note events, instructor observations and reports; users can delete individual entries or clear all history. On shared computers, clear history after practice. Speech synthesis may use the operating system's speech service. Model inspection fetches public model assets; frames remain local. Fonts are fetched from Google Fonts, with system font fallbacks. Use recordings with the owner's permission; there is no training-data reuse.
+The GitHub Pages app and this repository are public; the original Site retains its private access. Recordings are local object URLs and are not sent to a server. With cloud configuration enabled, saving sends profile/report data, note events, observations, file metadata and compact waveforms to Supabase. Users can delete individual reports or clear history. Sign out on shared computers. Speech synthesis may use the operating system's speech service. Model inspection fetches public model assets; frames remain local. Fonts are fetched from Google Fonts, with system font fallbacks. Use recordings with the owner's permission; there is no training-data reuse.
 
 ## Verification
 
-Fourteen automated tests cover correct/slower performance, wrong pitch, missing and extra events, late transitions, uncertainty gating, strict tempo, malformed inputs, MIDI tempo changes and running status, silent audio, a clean A4 signal, report provenance, and server request validation. Local WAV export produced a valid mono 16-bit PCM WAV at 22,050 Hz. Browser checks cover the matching and uncertain demo states and responsive layout. Live camera capture, optional MediaPipe downloads, the Basic Pitch adapter and arbitrary user codecs require testing on the target devices.
+Twenty-three automated tests cover profile/media routing, audio envelopes, public-key validation, guided report semantics, and correct/slower performance, wrong pitch, missing and extra events, late transitions, uncertainty gating, strict tempo, malformed inputs, MIDI tempo changes and running status, silent audio, a clean A4 signal, report provenance, and server request validation. Cloud sign-in, cross-device persistence and database policy enforcement still require a configured Supabase project and two-account testing. Local WAV export produced a valid mono 16-bit PCM WAV at 22,050 Hz. Browser checks cover the matching and uncertain demo states and responsive layout. Live camera capture, optional MediaPipe downloads, the Basic Pitch adapter and arbitrary user codecs require testing on the target devices.
 
 These tests are regression checks on synthetic fixtures, not a measured accuracy benchmark on real learners. The PDF's 90% F1, 95% alignment, latency and availability goals remain unmeasured.
 
@@ -123,7 +135,7 @@ These tests are regression checks on synthetic fixtures, not a measured accuracy
 
 1. Obtain consented, instructor-labeled reference/attempt pairs with negative controls and disputed judgments.
 2. Benchmark guitar transcription and alignment; add calibrated uncertainty and independently measured acceptance gates.
-3. Add a FastAPI job service, bounded worker queue, PostgreSQL, private object storage, authentication, per-user access controls and deletion. Those production services are not included in this browser MVP.
+3. Connect and validate the included Supabase profile/report integration. Add a FastAPI job service, bounded worker queue and private recording storage for hosted media analysis; those services are not included.
 4. Calibrate instrument/object geometry before making visual technique claims. Add validated step semantics for crafts and phonetic alignment for language learning.
 5. Introduce an optional open-source coaching LLM only behind schema validation that permits explanations of measured findings, never new unsupported observations.
 
