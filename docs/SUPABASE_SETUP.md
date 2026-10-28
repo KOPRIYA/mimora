@@ -1,6 +1,6 @@
 # Connect MIMORA accounts
 
-The sign-in and shared-profile integration is implemented, but disabled until you connect a Supabase project. No hosted database or email flow has been verified yet.
+The app is connected to the owner’s Supabase project. On 28 October 2026, both tables, enabled row-level security, matching owner policies and denial of anonymous reads were verified. The Site URL and three exact redirect URLs below were configured. Email sign-in and cross-device persistence still need a signed-in end-to-end test. The project currently uses the default email sender; configure custom SMTP before inviting public users.
 
 ## 1. Create the database tables
 

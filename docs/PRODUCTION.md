@@ -14,7 +14,7 @@ For your own domain, connect the GitHub repository to Cloudflare Pages. Use fram
 
 GitHub Actions runs the syntax checks and 23 behavioral tests. Configure hosting branch controls/required checks before treating the pipeline as a release gate; the included workflow alone does not prevent a hosting service from deploying a failing commit.
 
-The static deployment does not run `server.mjs`. Spoken playback uses device speech; downloadable WAV requires the local server. The Supabase account/profile/report integration is implemented but awaits project configuration and live verification. There is no cloud video library yet. Keep those limits explicit in the beta.
+The static deployment does not run `server.mjs`. Spoken playback uses device speech; downloadable WAV requires the local server. The Supabase account/profile/report integration is configured; tables, owner policies and denied anonymous access were verified. Email and cross-device end-to-end testing remain. Configure custom SMTP before public sign-ups. There is no cloud video library yet. Keep those limits explicit in the beta.
 
 ### Launch a managed pilot with accounts and durable assessments — recommended next
 

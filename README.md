@@ -29,7 +29,7 @@ npm run check
 
 ## Profile-based practice
 
-Start with a neutral workspace. Choose **Learning profile**, then your skill, experience, goal, practice language and feedback preference. Guest previews are temporary. Connect Supabase using [the setup guide](docs/SUPABASE_SETUP.md) to enable email sign-in and shared profiles/reports.
+Start with a neutral workspace. Choose **Learning profile**, then your skill, experience, goal, practice language and feedback preference. Guest previews are temporary. Supabase is connected for email sign-in and shared profiles/reports. Its current default email sender limits testing to project-team addresses. See [the setup and verification guide](docs/SUPABASE_SETUP.md) before inviting public users.
 
 - Language: target phrase, waveforms, duration/quiet-time measurements, pronunciation review categories.
 - Craft: expert-derived step checklist, video review and optional hand inspection.
@@ -61,7 +61,7 @@ The app combines the profile with supported media types. MIDI selects music auto
 | Coaching | Deterministic text derived from measured findings. No LLM dependency or invented physical diagnoses. |
 | Audio feedback | Browser speech playback; downloadable spoken WAV through the local Node server (macOS `say`, or Linux `espeak-ng`). Browser speech voices vary by device. |
 | Reports | Detailed text with source spans, methods, finding states, practice actions, limitations, and dismissed-findings audit |
-| Profiles and history | Supabase email sign-in and per-user database integration; configuration required. Latest 30 reports shown across devices. Guest profiles are temporary; source recordings are not uploaded. |
+| Profiles and history | Supabase email sign-in and per-user database integration; custom email sender needed for public sign-ups. Latest 30 reports shown across devices. Guest profiles are temporary; source recordings are not uploaded. |
 | Limits | 250 MB file size; audio/video up to 60 seconds; 1,000 events; MIDI timestamps up to 600 seconds |
 
 Do not use this release to grade unconstrained polyphonic music, infer exact fret/string contact, diagnose injuries, or judge a person's accent. These capabilities are not implemented. Different valid fingering is not penalized. A perfect event score does not imply perfect technique.
@@ -127,7 +127,7 @@ The GitHub Pages app and this repository are public; the original Site retains i
 
 ## Verification
 
-Twenty-three automated tests cover profile/media routing, audio envelopes, public-key validation, guided report semantics, and correct/slower performance, wrong pitch, missing and extra events, late transitions, uncertainty gating, strict tempo, malformed inputs, MIDI tempo changes and running status, silent audio, a clean A4 signal, report provenance, and server request validation. Cloud sign-in, cross-device persistence and database policy enforcement still require a configured Supabase project and two-account testing. Local WAV export produced a valid mono 16-bit PCM WAV at 22,050 Hz. Browser checks cover the matching and uncertain demo states and responsive layout. Live camera capture, optional MediaPipe downloads, the Basic Pitch adapter and arbitrary user codecs require testing on the target devices.
+Twenty-three automated tests cover profile/media routing, audio envelopes, public-key validation, guided report semantics, and correct/slower performance, wrong pitch, missing and extra events, late transitions, uncertainty gating, strict tempo, malformed inputs, MIDI tempo changes and running status, silent audio, a clean A4 signal, report provenance, and server request validation. Supabase tables, owner-only policies and denied anonymous reads were verified. Email sign-in, cross-device persistence and two-account testing remain to be completed. Local WAV export produced a valid mono 16-bit PCM WAV at 22,050 Hz. Browser checks cover the matching and uncertain demo states and responsive layout. Live camera capture, optional MediaPipe downloads, the Basic Pitch adapter and arbitrary user codecs require testing on the target devices.
 
 These tests are regression checks on synthetic fixtures, not a measured accuracy benchmark on real learners. The PDF's 90% F1, 95% alignment, latency and availability goals remain unmeasured.
 
