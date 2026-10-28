@@ -1,0 +1,2 @@
+# Optional; Python 3.10 recommended for Basic Pitch model dependencies.
+basic-pitch==0.4.0

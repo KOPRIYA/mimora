@@ -1,0 +1,52 @@
+{
+  "events": [
+    {
+      "pitch": 60,
+      "start": 0.5,
+      "end": 1.0175,
+      "confidence": 1
+    },
+    {
+      "pitch": 62,
+      "start": 1.19,
+      "end": 1.7074999999999998,
+      "confidence": 1
+    },
+    {
+      "pitch": 64,
+      "start": 1.8800000000000001,
+      "end": 2.3975,
+      "confidence": 1
+    },
+    {
+      "pitch": 66,
+      "start": 2.57,
+      "end": 3.0875,
+      "confidence": 1
+    },
+    {
+      "pitch": 67,
+      "start": 3.26,
+      "end": 3.7775,
+      "confidence": 1
+    },
+    {
+      "pitch": 65,
+      "start": 4.1899999999999995,
+      "end": 4.7075,
+      "confidence": 1
+    },
+    {
+      "pitch": 64,
+      "start": 4.64,
+      "end": 5.157499999999998,
+      "confidence": 1
+    },
+    {
+      "pitch": 60,
+      "start": 5.33,
+      "end": 5.847499999999999,
+      "confidence": 1
+    }
+  ]
+}
