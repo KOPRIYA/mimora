@@ -12,9 +12,9 @@ The current studio can be served as static files from `dist/`. Media processing 
 
 For your own domain, connect the GitHub repository to Cloudflare Pages. Use framework preset None, repository root `/`, build command `exit 0`, output directory `dist`, and production branch `main`. Configure a domain you own and verify HTTPS. A domain name has not been purchased or checked for availability. Cloudflare's documentation supports static HTML projects and these build settings: https://developers.cloudflare.com/pages/framework-guides/deploy-anything/
 
-GitHub Actions runs the syntax checks and 23 behavioral tests. Configure hosting branch controls/required checks before treating the pipeline as a release gate; the included workflow alone does not prevent a hosting service from deploying a failing commit.
+GitHub Actions runs the syntax checks and 33 behavioral tests. Configure hosting branch controls/required checks before treating the pipeline as a release gate; the included workflow alone does not prevent a hosting service from deploying a failing commit.
 
-The static deployment does not run `server.mjs`. Spoken playback uses device speech; downloadable WAV requires the local server. The Supabase account/profile/report integration is configured; tables, owner policies and denied anonymous access were verified. Email and cross-device end-to-end testing remain. Configure custom SMTP before public sign-ups. There is no cloud video library yet. Keep those limits explicit in the beta.
+The static deployment does not run `server.mjs`. English pronunciation now uses on-device phoneme recognition with explicit matching excerpt selection. Version 3 generates natural and permitted expert-voice coaching in the browser and supports WAV downloads. A lightweight device-voice option remains. The model downloads are substantial; see SPEECH_MODELS.md. The Supabase account/profile/report integration is configured; tables, owner policies and denied anonymous access were verified. The owner confirmed email sign-in works; cross-device testing remains. Configure custom SMTP before public sign-ups. There is no cloud video library yet. Keep those limits explicit in the beta.
 
 ### Launch a managed pilot with accounts and durable assessments — recommended next
 

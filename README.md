@@ -27,11 +27,19 @@ npm test
 npm run check
 ```
 
+## Pronunciation and voice feedback (v3)
+
+Language mode now recognizes speech sounds from selected English excerpts. Enter the target word/phrase, choose one matching occurrence in each clip, listen to confirm, then compare. Feedback shows possible substitutions, missing/extra sounds, what to retain, original timestamps and concrete practice hints. Uncertain or unrelated speech abstains; no overall pronunciation score is assigned. The expert is a reference for this exercise, not a universal accent standard.
+
+Choose Natural coach or, with permission, Expert’s voice for on-device neural speech and downloadable WAV feedback. The original expert playback remains separate from generated speech. Browser-recorded audio/video can be downloaded from its recording card before leaving the session.
+
+First use downloads large model files; desktop browsers are recommended. No recording is uploaded for model inference. See [models and licences](docs/SPEECH_MODELS.md), [architecture review](docs/ARCHITECTURE_REVIEW.md), and [account setup](docs/SUPABASE_SETUP.md).
+
 ## Profile-based practice
 
 Start with a neutral workspace. Choose **Learning profile**, then your skill, experience, goal, practice language and feedback preference. Guest previews are temporary. Supabase is connected for email sign-in and shared profiles/reports. Its current default email sender limits testing to project-team addresses. See [the setup and verification guide](docs/SUPABASE_SETUP.md) before inviting public users.
 
-- Language: target phrase, waveforms, duration/quiet-time measurements, pronunciation review categories.
+- Language: target phrase, excerpt selection, English phoneme comparison, source replay and pronunciation review categories.
 - Craft: expert-derived step checklist, video review and optional hand inspection.
 - Movement: sequence checklist and coordination/timing observations.
 - Presentation: key-message outline, delivery categories and audio measurements.
@@ -56,10 +64,10 @@ The app combines the profile with supported media types. MIDI selects music auto
 | Audio | Browser decoding and resampling, worker-based autocorrelation, clipping/silence/pitch coverage checks. Clean single-note phrases only; estimated findings are **possible**, with no automatic score. Repeated notes without a gap may merge. |
 | Video | Local upload, playback and camera capture. Browser-decodable audio is measured for music. Incompatible codecs fall back to manual review. |
 | Replay | Both corresponding finding spans seek to original timestamps and play together. Full clips play at their original relative timing; there is no continuous nonlinear video time warp. |
-| Manual domains | Craft, language, and other demonstrations: side-by-side recording review and timestamped instructor observations. No automated pronunciation or object-action scoring. |
+| Manual domains | Craft and other demonstrations: side-by-side review and timestamped observations. English language practice adds experimental phonetic comparison; no automatic proficiency grade or object-action scoring. |
 | Hand landmarks | Optional MediaPipe inspection of paused frames; model runs in-browser. No automated technique conclusions or landmark scoring. |
 | Coaching | Deterministic text derived from measured findings. No LLM dependency or invented physical diagnoses. |
-| Audio feedback | Browser speech playback; downloadable spoken WAV through the local Node server (macOS `say`, or Linux `espeak-ng`). Browser speech voices vary by device. |
+| Audio feedback | On-device Pocket TTS natural and permitted expert voices with downloadable WAV; explicit device-voice fallback. Generated coaching is labeled synthetic. |
 | Reports | Detailed text with source spans, methods, finding states, practice actions, limitations, and dismissed-findings audit |
 | Profiles and history | Supabase email sign-in and per-user database integration; custom email sender needed for public sign-ups. Latest 30 reports shown across devices. Guest profiles are temporary; source recordings are not uploaded. |
 | Limits | 250 MB file size; audio/video up to 60 seconds; 1,000 events; MIDI timestamps up to 600 seconds |
@@ -96,7 +104,7 @@ The public URL is https://kopriya.github.io/mimora/. Relative asset and worker p
 
 macOS needs no additional speech package. On Linux, install `espeak-ng` with your system package manager. Windows users can use browser speech or run the local server under Linux/WSL with espeak-ng. The endpoint accepts only a bounded text report, runs speech generation without a shell, serializes jobs, uses temporary files, and rejects cross-origin requests. The server binds only to loopback. Do not expose it directly to the internet.
 
-Online, **Listen to feedback** works through browser speech. The WAV button explains that downloadable speech requires the local server. It does not silently return a text file labeled as audio.
+Online, **Listen to feedback** uses the chosen natural, permitted expert, or device voice. Neural speech can be downloaded as a real WAV directly in the browser; device voices support playback only. The local server’s older speech endpoint remains optional and is not used by the new voice controls.
 
 ## Architecture
 
@@ -110,6 +118,9 @@ Reference + attempt (local File/MediaRecorder)
   -> browser speech / local WAV / text report / saved attempts
 ```
 
+- `dist/speech-core.js`: pure phoneme decoding/alignment, evidence gates, WAV encoding and reports.
+- `dist/phoneme-worker.js`: pinned on-device recognition adapter.
+- `dist/speech-studio.js`: excerpt selection, cancellation, voice controls and recording downloads.
 - `dist/core.js`: media-independent MIDI parser, alignment, scoring, audio measurement, and report contracts.
 - `dist/experience.js`: profile normalization, workspace selection, audio envelopes and guided reports.
 - `dist/cloud.js` / `config.js`: Supabase sign-in, shared profiles and reports.
@@ -127,7 +138,7 @@ The GitHub Pages app and this repository are public; the original Site retains i
 
 ## Verification
 
-Twenty-three automated tests cover profile/media routing, audio envelopes, public-key validation, guided report semantics, and correct/slower performance, wrong pitch, missing and extra events, late transitions, uncertainty gating, strict tempo, malformed inputs, MIDI tempo changes and running status, silent audio, a clean A4 signal, report provenance, and server request validation. Supabase tables, owner-only policies and denied anonymous reads were verified. Email sign-in, cross-device persistence and two-account testing remain to be completed. Local WAV export produced a valid mono 16-bit PCM WAV at 22,050 Hz. Browser checks cover the matching and uncertain demo states and responsive layout. Live camera capture, optional MediaPipe downloads, the Basic Pitch adapter and arbitrary user codecs require testing on the target devices.
+Thirty-three automated tests cover speech evidence and excerpt boundaries, WAV serialization, profile/media routing, audio envelopes, public-key validation, guided report semantics, and correct/slower performance, wrong pitch, missing and extra events, late transitions, uncertainty gating, strict tempo, malformed inputs, MIDI tempo changes and running status, silent audio, a clean A4 signal, report provenance, and server request validation. Supabase tables, owner-only policies and denied anonymous reads were verified. The owner confirmed email sign-in and profile entry work. Cross-device persistence and two-account testing remain to be completed. Local WAV export produced a valid mono 16-bit PCM WAV at 22,050 Hz. Browser checks cover the matching and uncertain demo states and responsive layout. Live camera capture, optional MediaPipe downloads, the Basic Pitch adapter and arbitrary user codecs require testing on the target devices.
 
 These tests are regression checks on synthetic fixtures, not a measured accuracy benchmark on real learners. The PDF's 90% F1, 95% alignment, latency and availability goals remain unmeasured.
 
