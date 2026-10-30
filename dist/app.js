@@ -76,7 +76,7 @@ async function loadFile(side,file,durationHint=null,recorded=false){
  }catch(error){if(item?.url)URL.revokeObjectURL(item.url);cleanSide(side);state[side]=null;toast(error.message);}finally{setBusy(false);render();}
 }
 async function assess(){
- if(busy)return;if(recorder?.state==='recording'){toast('Stop recording before comparing.');return;}if(!state.reference||!state.learner){toast('Add both a reference and your attempt.');return;}stop();const epoch=authEpoch,w=workspace();setBusy(true,'Comparing recordings…');
+ if(busy)return;if(recorder?.state==='recording'){toast('Stop recording before comparing.');return;}if(!state.reference||!state.learner){toast('Add both a reference and your attempt.');return;}stop();changed();render();const epoch=authEpoch,w=workspace();setBusy(true,'Comparing recordings…');
  try{if(w.domain==='language')state.result=await speech.compare();else if(!w.showMusic)state.result=manualAssessment(w,state.reference,state.learner);else{for(const item of media())await ensureNotes(item);if(epoch!==authEpoch)return;
  const a=state.reference,b=state.learner;if(a.warnings?.length||b.warnings?.length||!a.events.length||!b.events.length){state.result=manualAssessment(w,a,b);state.result.limitations=[...(a.warnings||[]).map(x=>'Reference: '+x),...(b.warnings||[]).map(x=>'Learner: '+x),'Unable to assess notes reliably. Review the recordings manually or try direct MIDI.'];}
  else{state.result=compare(a.events,b.events,{timingTolerance:Number($('tolerance').value),allowSlower:$('allowSlower').checked,precise:a.precise&&b.precise});state.result.domain='music';}}
